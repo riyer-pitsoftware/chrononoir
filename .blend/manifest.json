@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "created_at": "2026-02-28T00:00:00Z",
+  "updated_at": "2026-02-28T00:00:00Z",
+  "projects": [
+    {
+      "name": "chrono-canvas",
+      "path": "/Users/riyer/code/chrono-canvas",
+      "beads_prefix": "history-faces"
+    },
+    {
+      "name": "neo-mumbai-noir",
+      "path": "/Users/riyer/code/neo-mumbai-noir",
+      "beads_prefix": "neo-mumbai-noir"
+    }
+  ],
+  "requirements_docs": [
+    "Blended_Product_MVP_PRD.md",
+    "Blended_Product_MVP_Plan.md",
+    "Blended_Product_Plan.md",
+    "Blended_Product_Phase_Module_Map.md",
+    "AGENT_START_HERE.md"
+  ],
+  "phases_completed": ["discovery", "architecture", "tasks"],
+  "current_phase": "complete"
+}
