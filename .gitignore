@@ -207,8 +207,10 @@ marimo/_lsp/
 __marimo__/
 .beads/*
 beads*/*
-hackathon_submission_checklist.md
 .DS_Store
+
+# Archived feedback (processed into beads)
+archive/
 .dolt/sql-server.info
 .doltcfg/privileges.db
 AGENTS.md
