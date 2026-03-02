@@ -1,6 +1,7 @@
 {
   "database": "dolt",
   "jsonl_export": "issues.jsonl",
-  "issue_prefix": "chrononoir",
-  "backend": "dolt"
+  "backend": "dolt",
+  "dolt_mode": "server",
+  "dolt_database": "beads_chrononoir-mvp-build-plan"
 }
