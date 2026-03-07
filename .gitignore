@@ -215,3 +215,8 @@ archive/
 .doltcfg/privileges.db
 AGENTS.md
 config.yaml
+
+# Internal review/planning docs (agent use only, not for repo)
+*_REVIEW_*.md
+Style_*.md
+package-lock.json
