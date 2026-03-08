@@ -1,6 +1,6 @@
 # Gap Analysis: ChronoNoir Studio MVP
 
-> Generated 2026-02-28 | Phase 1 Discovery
+> Generated 2026-02-28 | Updated 2026-03-08
 
 ## Verdict Legend
 - **EXISTS** — directly available in an input project, usable as-is
@@ -14,10 +14,10 @@
 
 | ID | Requirement | chrono-canvas | neo-mumbai-noir | Verdict | Notes |
 |----|------------|---------------|-----------------|---------|-------|
-| RD.1 | Gemini model for narrative/planning | GAP — uses Claude/OpenAI/Ollama | GAP — uses Ollama only | **GAP** | Must add Gemini provider to LLM router |
-| RD.2 | Google GenAI SDK or ADK | GAP — uses Anthropic/OpenAI SDKs | GAP — uses raw HTTP to Ollama | **GAP** | Must implement GenAI SDK/ADK orchestration path |
-| RD.3 | GCP deployment + GCP storage | PARTIAL — GKE manifests exist (`deploy/gke/`) but no blended proof flow | GAP | **PARTIAL** | GKE scaffolding exists; need Cloud Run/GKE deployment + GCP storage for artifacts |
-| RD.4 | Multimodal I/O (text+image+audio+video) | PARTIAL — text+image exists, no audio/video | PARTIAL — text+image exists, no audio/video | **GAP** | Audio narration and video stitch are new capabilities |
+| RD.1 | Gemini model for narrative/planning | EXISTS — Gemini provider in LLM router | GAP — uses Ollama only | **EXISTS** | Gemini added as primary provider; hackathon mode enforces Gemini-only |
+| RD.2 | Google GenAI SDK or ADK | EXISTS — google.genai SDK for Imagen + Gemini LLM + coherence | GAP — uses raw HTTP to Ollama | **EXISTS** | google.genai Client used throughout: Imagen image gen, Gemini LLM router, storyboard coherence |
+| RD.3 | GCP deployment + GCP storage | PARTIAL — GKE + Cloud Run scripts exist (`deploy/gke/`, `deploy/cloudrun/`) but not yet deployed | GAP | **PARTIAL** | Cloud Run deployment scripts added (setup-gcp.sh, deploy.sh, cloudbuild.yaml, CD workflow). Awaiting actual deployment — gcloud CLI needed |
+| RD.4 | Multimodal I/O (text+image+audio+video) | PARTIAL — text+image+audio narration exist; video stitch pending | PARTIAL — text+image exists | **PARTIAL** | Audio narration via TTS implemented. Live API voice narration + interleaved generation in progress (cn-du8, cn-7lm) |
 | RD.5 | Interleaved mixed output stream | PARTIAL — WebSocket streams text progress + final image | GAP | **PARTIAL** | WebSocket exists; need interleaved media milestones |
 | RS.1 | Public repo with reproducible spin-up | PARTIAL — Makefile + docker-compose exist | PARTIAL — start.sh exists | **PARTIAL** | Need unified judge-ready README |
 | RS.2 | GCP deployment proof | GAP | GAP | **GAP** | No recording/evidence workflow |
@@ -30,7 +30,7 @@
 
 | ID | Requirement | chrono-canvas | neo-mumbai-noir | Verdict | Notes |
 |----|------------|---------------|-----------------|---------|-------|
-| R0.1 | Mode selection in <=2 clicks | PARTIAL — has route-based nav (`App.tsx`) but no mode selector | PARTIAL — has tab-based UI (`unified_ui.py`) with 7 tabs | **PARTIAL** | Need unified mode switch: Story Director vs Historical Lens in React frontend |
+| R0.1 | Mode selection in <=2 clicks | EXISTS — hackathon mode auto-routes to Story Director; normal mode shows both | PARTIAL — has tab-based UI (`unified_ui.py`) with 7 tabs | **EXISTS** | Hackathon mode flag controls auto-redirect; sidebar reorders story-first; mode selection in 1 click |
 | R0.2 | One prebuilt template per mode | GAP | GAP | **GAP** | No template/preset system in either project |
 | R0.3 | Empty-state guidance | GAP — Generate page has form but no guidance | PARTIAL — Guide tab loads PRD.md | **GAP** | Need onboarding copy with time-to-result messaging |
 
@@ -41,10 +41,10 @@
 | ID | Requirement | chrono-canvas | neo-mumbai-noir | Verdict | Notes |
 |----|------------|---------------|-----------------|---------|-------|
 | R1.1 | Free-text prompt → image output | EXISTS — `POST /api/generate` with full pipeline | EXISTS — Story tab → extraction → generation | **EXISTS** | Both have this; chrono-canvas is API-backed with persistent records |
-| R1.2 | Storyboard: >=3 scene outputs per run | GAP — portrait-centric (1 output per run) | EXISTS — Storyboard tab assembles multi-scene output from characters + images | **PARTIAL** | Neo has the workflow but not as API-backed durable run artifacts in chrono-canvas model |
+| R1.2 | Storyboard: >=3 scene outputs per run | EXISTS — story pipeline generates multi-panel storyboards with coherence check | EXISTS — Storyboard tab assembles multi-scene output | **EXISTS** | Story pipeline produces 3+ panels per run, storyboard coherence node evaluates consistency |
 | R1.3 | Portrait: 1 primary output per run | EXISTS — core pipeline produces 1 portrait per generation request | N/A | **EXISTS** | Directly available |
 | R1.4 | Export on completed outputs | EXISTS — `GET /api/export/{id}/download` + Export.tsx page | PARTIAL — Gallery tab shows images but no structured export | **EXISTS** | chrono-canvas has full export path |
-| FR1 | Both pipelines from one account | PARTIAL — only portrait pipeline exists | N/A | **PARTIAL** | Need to add `creative_story` run type |
+| FR1 | Both pipelines from one account | EXISTS — portrait + creative_story pipelines both available | N/A | **EXISTS** | Story Director pipeline added with storyboard generation, coherence check, export |
 | FR2 | Persistent run records | EXISTS — generation_requests table with full trace | PARTIAL — SQLite stores stories/characters but not as "run" records | **EXISTS** | chrono-canvas model is the target |
 | FR3 | Revisit prior outputs + re-export | EXISTS — AuditList.tsx, AuditDetail.tsx pages | PARTIAL — Gallery tab shows past images | **EXISTS** | chrono-canvas has audit trail UI |
 | FR4 | Output cards: mode, time, export state | PARTIAL — shows status but not mode (single-mode currently) | GAP | **PARTIAL** | Need to add mode field to output cards |
@@ -112,10 +112,10 @@
 
 | Requirement | chrono-canvas | neo-mumbai-noir | Verdict |
 |------------|---------------|-----------------|---------|
-| Must use Gemini | GAP | GAP | **GAP** |
-| Must use GenAI SDK/ADK | GAP | GAP | **GAP** |
-| Must use Google Cloud service | PARTIAL (GKE scaffolding) | GAP | **PARTIAL** |
-| Multimodal beyond text-only | PARTIAL (text+image) | PARTIAL (text+image) | **PARTIAL** — need audio+video |
+| Must use Gemini | EXISTS (primary LLM provider) | GAP | **EXISTS** |
+| Must use GenAI SDK/ADK | EXISTS (google.genai throughout) | GAP | **EXISTS** |
+| Must use Google Cloud service | PARTIAL (GKE + Cloud Run scripts, not yet deployed) | GAP | **PARTIAL** |
+| Multimodal beyond text-only | PARTIAL (text+image+audio; Live API in progress) | PARTIAL (text+image) | **PARTIAL** — video stitch still needed |
 | Demo/proof artifacts | GAP | GAP | **GAP** |
 
 ---
@@ -124,13 +124,12 @@
 
 | Verdict | Phase -1 | Phase 0 | Phase 1 | Phase 2 | Phase 3 | NFR | UX | Analytics | Total |
 |---------|----------|---------|---------|---------|---------|-----|-----|-----------|-------|
-| EXISTS | 0 | 0 | 4 | 2 | 0 | 2 | 1 | 0 | **9** |
-| PARTIAL | 2 | 1 | 2 | 2 | 1 | 3 | 1 | 0 | **12** |
-| GAP | 7 | 2 | 0 | 2 | 4 | 0 | 2 | 2 | **19** |
+| EXISTS | 2 | 1 | 5 | 2 | 0 | 2 | 1 | 0 | **13** |
+| PARTIAL | 2 | 0 | 1 | 2 | 1 | 3 | 1 | 0 | **10** |
+| GAP | 4 | 2 | 0 | 2 | 4 | 0 | 2 | 2 | **16** |
 | CONFLICT | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** |
 
-**Key Takeaway:** 19 gaps + 12 partial items to close. The biggest gap clusters are:
-1. **Devpost compliance** (Gemini, GenAI SDK, GCP proof, demo artifacts) — 7 gaps
-2. **Monetization/Team** (credits, billing, workspaces) — 4 gaps
-3. **Multimodal output** (audio narration, video stitch, interleaved streaming) — contained in Phase -1/2
-4. **Storyboard integration** — Neo's workflow needs to become API-backed run artifacts in chrono-canvas
+**Key Takeaway:** 16 gaps + 10 partial items remain (down from 19 + 12). Closed:
+1. **Devpost compliance** — Gemini + GenAI SDK fully integrated (2 gaps → EXISTS). GCP deploy scripts ready, awaiting actual deployment.
+2. **Core generation** — Story Director pipeline, storyboard coherence, dual mode all operational.
+3. **Remaining gaps** — GCP deployment proof, demo video, monetization/team features, analytics, video stitch.
