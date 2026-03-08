@@ -220,3 +220,4 @@ config.yaml
 *_REVIEW_*.md
 Style_*.md
 package-lock.json
+Constraints.md
